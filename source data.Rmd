@@ -1,6 +1,6 @@
 ---
 title: "source data"
-author: "Ying Liu"
+author: "Ying Liu, Yingchi Cheung, Xuening Tang"
 date: '`r Sys.Date()`'
 output: html_document
 ---
@@ -15,7 +15,9 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r}
+```{r, setup}
+getwd()
+
 library(dplyr)
 library(cowplot)
 library(lubridate)
@@ -23,8 +25,59 @@ library(lubridate)
 
 
 ```{r, read data}
-population<-read.csv(file='C:/Users/Alina/Desktop/DUKE_22FALL/872/YingLiu-YingchiCheung-XueningTang/data/population2011-2022.csv',header=TRUE)
 
-water<-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TRUE)
+population<-read.csv("./data/population2011-2022.csv",stringsAsFactors = TRUE)
+
+water.withdraw<-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TRUE)
+
+water.discharge<-read.csv(
+  "./data/EDA_final project_wastewater_discharge.csv",stringsAsFactors = TRUE)
+```
+
+```{r, data wrangling}
+#1.First step eliminate the extra column in data set and convert it into format we need.
+durh_pop <- 
+  population %>%
+  filter(Year==2012|Year==2013|Year==2014|Year==2015
+         |Year==2016|Year==2017|Year==2018|Year==2019
+         |Year==2020|Year==2021) %>%
+  mutate(Change_Percentage = Change..)%>%
+  select(Year,Population,Change_Percentage) 
+
+#2.Next join the tables together as our main data frame to conduct results.
+water_final <- left_join(water.discharge, water.withdraw, by = c("Year", "Month"))
+
+pop_water_final <- full_join(durh_pop,water_final)#main data frame to draw line charts
+
+pop_water_summaries <- 
+  pop_water_final %>%
+  group_by(Year, Population) %>%
+  summarise(mean.discharge = mean(Monthly.Discharge.Wastewater), 
+            sd.discharge = sd(Monthly.Discharge.Wastewater), 
+            mean.withdraw = mean(Monthly.Water.Withdraw), 
+            sd.withdraw = sd(Monthly.Water.Withdraw))
+#sub-data frame to draw boxplots
+
+```
+
+```{r, saving data}
+write.csv(pop_water_final, row.names = FALSE, file = "./data/Durham_water&population_2012-2021.csv")
+write.csv(pop_water_summaries, row.names = FALSE, file = "./data/Durham_county_water_withdraw&diacharge_summary.csv")
+```
+
+```{r, line charts}
+
+```
+
+```{r, boxplots}
+
+```
+
+```{r, linear regression}
+
+```
+
+```{r, test}
+
 ```
 
