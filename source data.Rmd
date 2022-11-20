@@ -22,7 +22,9 @@ library(lubridate)
 ```
 
 
-```{r}
+```{r, read data}
 population<-read.csv(file='C:/Users/Alina/Desktop/DUKE_22FALL/872/YingLiu-YingchiCheung-XueningTang/data/population2011-2022.csv',header=TRUE)
+
+water<-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TRUE)
 ```
 
