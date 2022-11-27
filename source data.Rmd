@@ -104,9 +104,9 @@ print(DW_linechart)
 ```{r, boxplots}
 Wastewater_box <-
   ggplot(water_final, aes(x = Month, y = Monthly.Discharge.Wastewater)) +
-  geom_boxplot(aes(color = , alpha = 0.5) +
-  scale_x_discrete(drop = FALSE) 
-Wastewater_box
+  geom_boxplot(aes(color = Year, alpha = 0.5)) +
+  scale_x_discrete(drop = FALSE)
+print(Wastewater_box)
 ```
 
 ```{r, linear regression}
