@@ -1,3 +1,4 @@
+
 ---
 title: "source data"
 author: "Ying Liu, Yingchi Cheung, Xuening Tang"
@@ -18,10 +19,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r, setup}
-<<<<<<< HEAD
 
-=======
->>>>>>> 66583aba28e05bee5a37cdc47f2bb1295a431d1e
 getwd()
 library(tidyverse)
 library(dplyr)
