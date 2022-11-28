@@ -16,11 +16,17 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r, setup}
-getwd()
 
+getwd()
+library(tidyverse)
 library(dplyr)
 library(cowplot)
 library(lubridate)
+
+mytheme <- theme_classic(base_size = 12) +
+  theme(axis.text = element_text(color = "black"), 
+        legend.position = "bottom")
+theme_set(mytheme)
 ```
 
 
@@ -44,10 +50,11 @@ durh_pop <-
   mutate(Change_Percentage = Change..)%>%
   select(Year,Population,Change_Percentage) 
 
-#2.Next join the tables together as our main data frame to conduct results.
+#2.Next join the tables together as our main data frame to conduct analysis.
 water_final <- left_join(water.discharge, water.withdraw, by = c("Year", "Month"))
 
-pop_water_final <- full_join(durh_pop,water_final)#main data frame to draw line charts
+pop_water_final <- full_join(durh_pop,water_final)
+pop_water_final <-as.numeric(population)
 
 pop_water_summaries <- 
   pop_water_final %>%
@@ -66,18 +73,100 @@ write.csv(pop_water_summaries, row.names = FALSE, file = "./data/Durham_county_w
 ```
 
 ```{r, line charts}
+discharge_linechart <- 
+  ggplot(pop_water_summaries, aes(x = Year, y = mean.discharge)) +
+  geom_line() +
+  labs(title="Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
+  geom_smooth(method = lm)
+discharge_linechart 
 
+withdraw_linechart <- 
+  ggplot(pop_water_summaries, aes(x = Year, y = mean.withdraw)) +
+  geom_line() +
+  labs(title="Mean Water Withdraw", subtitle = "From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
+  geom_smooth(method = lm, color = "red")
+withdraw_linechart
+
+plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
+
+```
+
+
+```{r}
+DW_linechart = ggplot() +
+  geom_line (data = pop_water_summaries, aes(x = Year, y = mean.discharge), color ="blue") +
+  geom_line(data = pop_water_summaries, aes(x = Year, y = mean.withdraw), color = "red") +
+  xlab("Year")+
+  ylab("Millions of Gallons per Day")
+
+print(DW_linechart)
 ```
 
 ```{r, boxplots}
+#reshape the dataframe to draw boxplot
+library(MASS) 
+library(reshape2) 
+library(reshape)
+
+discharge_withdraw_grouped <- melt(water_final, id = c("Year","Month"))
+Wastewater_box<-
+  ggplot(discharge_withdraw_grouped , aes(x = Month, y = value,group=Month, fill=variable)) +
+  geom_boxplot() +
+  facet_wrap(~variable)+
+  mytheme
+    
+print(Wastewater_box)
 
 ```
 
-```{r, linear regression}
+```{r, linear regression discharge~withdraw}
+#format the lm() function
+discharge_withdraw <- lm(data = pop_water_final, Monthly.Discharge.Wastewater~ Monthly.Water.Withdraw)
+summary(discharge_withdraw)
 
+# Add a line and standard error for the linear regression
+discharge_withdraw_regression <- 
+  ggplot(pop_water_final, aes(x = Monthly.Discharge.Wastewater, y = Monthly.Water.Withdraw )) +
+  geom_smooth(method = "lm",color="blue") +
+  scale_y_log10() +
+  geom_point(aes(color=Monthly.Discharge.Wastewater,alpha=0.5))+
+  labs(x="Monthly Discharge Wastewater(MGD)",y="Monthly Water Withdraw(MGD)")+
+  mytheme
+print(discharge_withdraw_regression) 
+```
+```{r, linear regression population~withdraw}
+#format the lm() function
+population_discharge <- lm(data = pop_water_final, population~ Monthly.Discharge.Wastewater)
+summary(population_withdraw)
+
+# Add a line and standard error for the linear regression
+population_discharge_regression <- 
+  ggplot(pop_water_final, aes(x = population, y = Monthly.Discharge.Wastewater )) +
+  geom_smooth(method = "lm",color="blue") +
+  scale_y_log10() +
+  geom_point(aes(color=population,alpha=0.5))+
+  labs(x="population",y="Monthly Discharge Wastewater(MGD)")+
+  mytheme
+print(population_discharge_regression) 
+```
+```{r, linear regression population~discharge}
+#format the lm() function
+population_withdraw <- lm(data = pop_water_final, population~ Monthly.Water.Withdraw)
+summary(population_withdraw)
+
+# Add a line and standard error for the linear regression
+population_withdraw_regression <- 
+  ggplot(pop_water_final, aes(x = population, y = Monthly.Water.Withdraw )) +
+  geom_smooth(method = "lm",color="blue") +
+  scale_y_log10() +
+  geom_point(aes(color=population,alpha=0.5))+
+  labs(x="population",y="Monthly Water Withdraw(MGD)")+
+  mytheme
+print(population_withdraw_regression) 
+```
+```{r, Ttest}
+twosampleT<- t.test(pop_water_summaries$mean.discharge, pop_water_summaries$mean.withdraw)
+twosampleT
 ```
 
-```{r, test}
-
-```
 
