@@ -188,15 +188,15 @@ print(population_discharge_regression)
 
 ```{r, linear regression population~discharge}
 #format the lm() function
-population_withdraw <- lm(data = pop_water_final, population~ Monthly.Water.Withdraw)
+population_withdraw <- lm(data = pop_water_final, Population~ Monthly.Water.Withdraw)
 summary(population_withdraw)
 
 # Add a line and standard error for the linear regression
 population_withdraw_regression <- 
-  ggplot(pop_water_final, aes(x = population, y = Monthly.Water.Withdraw )) +
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
   geom_smooth(method = "lm",color="blue") +
   scale_y_log10() +
-  geom_point(aes(color=population,alpha=0.5))+
+  geom_point(aes(color=Population,alpha=0.5))+
   labs(x="population",y="Monthly Water Withdraw(MGD)")+
   mytheme
 print(population_withdraw_regression) 
