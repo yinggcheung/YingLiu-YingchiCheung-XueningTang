@@ -35,7 +35,7 @@ theme_set(mytheme)
 
 ```{r, read data}
 
-population<-read.csv("./data/population2011-2022.csv",stringsAsFactors = TRUE)
+population<-read.csv("./data/Population_new.csv",stringsAsFactors = TRUE)
 
 water.withdraw<-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TRUE)
 
@@ -49,15 +49,13 @@ durh_pop <-
   population %>%
   filter(Year==2012|Year==2013|Year==2014|Year==2015
          |Year==2016|Year==2017|Year==2018|Year==2019
-         |Year==2020|Year==2021) %>%
-  mutate(Change_Percentage = Change..)%>%
-  select(Year,Population,Change_Percentage) 
+         |Year==2020|Year==2021)
 
 #2.Next join the tables together as our main data frame to conduct analysis.
 water_final <- left_join(water.discharge, water.withdraw, by = c("Year", "Month"))
 
-pop_water_final <- full_join(durh_pop,water_final)
-pop_water_final <-as.numeric(population)
+pop_water_final <- left_join(durh_pop,water_final)
+pop_water_final$Population <-as.numeric(pop_water_final$Population)
 
 pop_water_summaries <- 
   pop_water_final %>%
@@ -81,20 +79,20 @@ discharge_linechart <-
   geom_line() +
   labs(title="Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
   geom_smooth(method = lm)
-<<<<<<< HEAD
-discharge_linechart 
-=======
+plot(discharge_linechart)
 
 withdraw_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.withdraw)) +
   geom_line() +
   labs(title="Mean Water Withdraw", subtitle = "From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
   geom_smooth(method = lm, color = "red")
+plot(withdraw_linechart)
 
 ```
+
 ```{r, fig.height = 8, fig.width = 5}
 plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
->>>>>>> 66583aba28e05bee5a37cdc47f2bb1295a431d1e
+
 
 withdraw_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.withdraw)) +
@@ -118,9 +116,12 @@ DW_linechart = ggplot() +
 print(DW_linechart)
 ```
 
-<<<<<<< HEAD
+
 ```{r, boxplots}
 #reshape the dataframe to draw boxplot
+install.packages(MASS)
+install.packages(reshape)
+install.packages(reshape2)
 library(MASS) 
 library(reshape2) 
 library(reshape)
@@ -133,14 +134,14 @@ Wastewater_box<-
   mytheme
     
 print(Wastewater_box)
-=======
+```
+
 ```{r}
 DW_linechart = ggplot() +
   geom_line (data = pop_water_summaries, aes(x = Year, y = mean.discharge), color ="blue") +
   geom_line(data = pop_water_summaries, aes(x = Year, y = mean.withdraw), color = "red") +
   xlab("Year")+
   ylab("Millions of Gallons per Day")
->>>>>>> 66583aba28e05bee5a37cdc47f2bb1295a431d1e
 
 print(DW_linechart)
 ```
@@ -168,21 +169,23 @@ discharge_withdraw_regression <-
   mytheme
 print(discharge_withdraw_regression) 
 ```
+
 ```{r, linear regression population~withdraw}
 #format the lm() function
-population_discharge <- lm(data = pop_water_final, population~ Monthly.Discharge.Wastewater)
-summary(population_withdraw)
+population_discharge <- lm(data = pop_water_final, Population~ Monthly.Discharge.Wastewater)
+summary(population_discharge)
 
 # Add a line and standard error for the linear regression
 population_discharge_regression <- 
-  ggplot(pop_water_final, aes(x = population, y = Monthly.Discharge.Wastewater )) +
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater )) +
   geom_smooth(method = "lm",color="blue") +
   scale_y_log10() +
-  geom_point(aes(color=population,alpha=0.5))+
-  labs(x="population",y="Monthly Discharge Wastewater(MGD)")+
+  geom_point(aes(color=Population,alpha=0.5))+
+  labs(x="Population",y="Monthly Discharge Wastewater(MGD)")+
   mytheme
 print(population_discharge_regression) 
 ```
+
 ```{r, linear regression population~discharge}
 #format the lm() function
 population_withdraw <- lm(data = pop_water_final, population~ Monthly.Water.Withdraw)
@@ -198,6 +201,7 @@ population_withdraw_regression <-
   mytheme
 print(population_withdraw_regression) 
 ```
+
 ```{r, Ttest}
 twosampleT<- t.test(pop_water_summaries$mean.discharge, pop_water_summaries$mean.withdraw)
 twosampleT
