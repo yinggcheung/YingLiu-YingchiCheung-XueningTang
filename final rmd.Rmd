@@ -77,18 +77,18 @@ write.csv(pop_water_summaries, row.names = FALSE, file = "./data/Durham_county_w
 discharge_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.discharge)) +
   geom_line() +
-  labs(title="Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
+  labs(title="Mean Wastewater Discharge From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
   geom_smooth(method = lm)
 plot(discharge_linechart)
 
 withdraw_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.withdraw)) +
   geom_line() +
-  labs(title="Mean Water Withdraw", subtitle = "From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
+  labs(title="Mean Water Withdraw From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
   geom_smooth(method = lm, color = "red")
 plot(withdraw_linechart)
-plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
 
+plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
 ```
 
 
