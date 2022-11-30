@@ -26,7 +26,7 @@ library(dplyr)
 library(cowplot)
 library(lubridate)
 
-mytheme <- theme_classic(base_size = 12) +
+mytheme <- theme_classic(base_size = 10) +
   theme(axis.text = element_text(color = "black"), 
         legend.position = "bottom")
 theme_set(mytheme)
@@ -88,7 +88,9 @@ withdraw_linechart <-
   geom_smooth(method = lm, color = "red")
 plot(withdraw_linechart)
 plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
+
 ```
+
 
 
 ```{r, boxplots}
@@ -101,6 +103,8 @@ library(reshape2)
 library(reshape)
 
 discharge_withdraw_grouped <- melt(water_final, id = c("Year","Month"))
+
+
 Wastewater_box<-
   ggplot(discharge_withdraw_grouped , aes(x = Month, y = value,group=Month, fill=variable)) +
   geom_boxplot() +
@@ -113,22 +117,47 @@ print(Wastewater_box)
 
 
 ```{r, linear regression discharge~withdraw}
+#draw scatterplot to see if a trend exsist
+discharge_withdraw <- 
+  ggplot(pop_water_final, aes(x =Monthly.Water.Withdraw, y = Monthly.Discharge.Wastewater)) +
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(title="Scatter plot of Monthly Water Withdrawal and Monthly Wastewater Discharge",x="Monthly Water Withdraw(MGD)",y="Monthly Wastewater Discharge(MGD)")+
+  mytheme
+print(discharge_withdraw) 
+
 #format the lm() function
-discharge_withdraw <- lm(data = pop_water_final, Monthly.Discharge.Wastewater~ Monthly.Water.Withdraw)
+discharge_withdraw_regression <- lm(data = pop_water_final,Monthly.Water.Withdraw~Monthly.Discharge.Wastewater)
 summary(discharge_withdraw)
 
 # Add a line and standard error for the linear regression
-discharge_withdraw_regression <- 
-  ggplot(pop_water_final, aes(x = Monthly.Discharge.Wastewater, y = Monthly.Water.Withdraw )) +
+discharge_withdraw_plot <- 
+  ggplot(pop_water_final, aes(x =Monthly.Water.Withdraw, y = Monthly.Discharge.Wastewater)) +
   geom_smooth(method = "lm",color="blue") +
-  scale_y_log10() +
-  geom_point(aes(color=Monthly.Discharge.Wastewater,alpha=0.5))+
-  labs(x="Monthly Discharge Wastewater(MGD)",y="Monthly Water Withdraw(MGD)")+
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(title="Linear Regression Between Monthly Water Withdrawal and Monthly Wastewater Discharge",x="Monthly Water Withdrawal(MGD)",y="Monthly Wastewater Discharge(MGD)")+
   mytheme
-print(discharge_withdraw_regression) 
+print(discharge_withdraw_plot) 
+#
+par(mfrow = c(2,2), mar=c(2,2,2,2))#divide screen by2*2 cell
+plot(discharge_withdraw_regression)
+par(mfrow = c(1,1))
 ```
 
 ```{r, linear regression population~withdraw}
+#scatterplot of annual population and annual mean discharge
+population_discharge <- 
+  ggplot(pop_water_summaries, aes(x = Population, y = mean.discharge )) +
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(title="Scatter plot of Annual Mean Water Withdrawal and population",x="Population",y="Mean Wastewater Discharge(MGD)")+
+  mytheme
+print(population_discharge)
+
+population_discharge_scatter <- 
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater )) +
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(title="Scatter plot of Monthly Water Withdrawal and population",x="Population",y="Monthly Wastewater Discharge(MGD)")+
+  mytheme
+print(population_discharge_scatter) 
 #format the lm() function
 population_discharge <- lm(data = pop_water_final, Population~ Monthly.Discharge.Wastewater)
 summary(population_discharge)
@@ -137,14 +166,27 @@ summary(population_discharge)
 population_discharge_regression <- 
   ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater )) +
   geom_smooth(method = "lm",color="blue") +
-  scale_y_log10() +
-  geom_point(aes(color=Population,alpha=0.5))+
-  labs(x="Population",y="Monthly Discharge Wastewater(MGD)")+
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(x="Population",y="Monthly Wastewater Discharge(MGD)")+
   mytheme
 print(population_discharge_regression) 
 ```
 
 ```{r, linear regression population~discharge}
+#scatterplot of annual population and annual mean withdraw
+population_withdraw <- 
+  ggplot(pop_water_summaries, aes(x = Population, y = mean.withdraw )) +
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(title="Scatter plot of Annual Mean Water Discharge and population",x="Population",y="Mean withdraw(MGD)")+
+  mytheme
+print(population_withdraw)
+
+population_withdraw_scatter <- 
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(title="Scatter plot of Monthly Water Discharge and population",x="Population",y="Monthly Water Withdraw(MGD)")+
+  mytheme
+print(population_withdraw_scatter) 
 #format the lm() function
 population_withdraw <- lm(data = pop_water_final, Population~ Monthly.Water.Withdraw)
 summary(population_withdraw)
@@ -153,15 +195,14 @@ summary(population_withdraw)
 population_withdraw_regression <- 
   ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
   geom_smooth(method = "lm",color="blue") +
-  scale_y_log10() +
-  geom_point(aes(color=Population,alpha=0.5))+
-  labs(x="population",y="Monthly Water Withdraw(MGD)")+
+  geom_point(aes(color=Year,alpha=0.5))+
+  labs(x="Population",y="Monthly Water Withdraw(MGD)")+
   mytheme
 print(population_withdraw_regression) 
 ```
 
 ```{r, Ttest}
-twosampleT<- t.test(pop_water_summaries$mean.discharge, pop_water_summaries$mean.withdraw)
+twosampleT<- t.test(pop_water_final$Monthly.Water.Withdraw, pop_water_final$Monthly.Discharge.Wastewater)
 twosampleT
 ```
 
