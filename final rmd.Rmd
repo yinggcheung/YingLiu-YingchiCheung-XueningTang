@@ -2,12 +2,19 @@
 ---
 title: "source data"
 author: "Ying Liu, Yingchi Cheung, Xuening Tang"
+<<<<<<< HEAD
 date: "`r Sys.Date()`"
 output:
   pdf_document: default
   html_document: default
 editor_options:
   chunk_output_type: console
+=======
+date: '`r Sys.Date()`'
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+>>>>>>> f7468648373a60dab0d8e3c331fe9d3462de72c1
 ---
 
 ```{r setup, include=FALSE}
@@ -89,33 +96,7 @@ withdraw_linechart <-
   labs(title="Mean Water Withdraw", subtitle = "From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
   geom_smooth(method = lm, color = "red")
 plot(withdraw_linechart)
-
-```
-
-```{r, fig.height = 8, fig.width = 5}
 plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
-
-
-withdraw_linechart <- 
-  ggplot(pop_water_summaries, aes(x = Year, y = mean.withdraw)) +
-  geom_line() +
-  labs(title="Mean Water Withdraw", subtitle = "From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
-  geom_smooth(method = lm, color = "red")
-withdraw_linechart
-
-plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
-
-```
-
-
-```{r}
-DW_linechart = ggplot() +
-  geom_line (data = pop_water_summaries, aes(x = Year, y = mean.discharge), color ="blue") +
-  geom_line(data = pop_water_summaries, aes(x = Year, y = mean.withdraw), color = "red") +
-  xlab("Year")+
-  ylab("Millions of Gallons per Day")
-
-print(DW_linechart)
 ```
 
 
@@ -136,13 +117,8 @@ Wastewater_box<-
 print(Wastewater_box)
 ```
 
-```{r}
-DW_linechart = ggplot() +
-  geom_line (data = pop_water_summaries, aes(x = Year, y = mean.discharge), color ="blue") +
-  geom_line(data = pop_water_summaries, aes(x = Year, y = mean.withdraw), color = "red") +
-  xlab("Year")+
-  ylab("Millions of Gallons per Day")
 
+<<<<<<< HEAD
 print(DW_linechart)
 ```
 
@@ -153,6 +129,8 @@ Wastewater_box <-
   scale_x_discrete(drop = FALSE)
 print(Wastewater_box)
 ```
+=======
+>>>>>>> f7468648373a60dab0d8e3c331fe9d3462de72c1
 
 ```{r, linear regression discharge~withdraw}
 #format the lm() function
