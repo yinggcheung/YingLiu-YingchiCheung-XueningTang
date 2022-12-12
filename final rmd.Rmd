@@ -1,6 +1,6 @@
 
 ---
-title: "source data"
+title: "Final Project_ENV872L-01"
 author: "Ying Liu, Yingchi Cheung, Xuening Tang"
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -51,6 +51,18 @@ mytheme <- theme_classic(base_size = 12) +
 theme_set(mytheme)
 ```
 
+##1.Introduction
+#Water shortages around US due to climate change is becoming worse and reported by several studies. Also we are in the situation that two of the largest reservoirs in America, which provide water and electricity tomillions, are in danger of reaching 'dead pool status. With the rapid urbanization in cities around the world and in US, the amount of population is rapidly increasing and the imperviousness of urban surface is increasing as well, which could raise the need for water withdraw from the lake bodies or reservoirs and the amount of wastewater discharge from daily life. 
+
+#At the same time, the intemperate discharge of wastewater in US is becoming a critical issue so in this way, we would like to investigate two main questions in our report: 
+#1)Is there any clear correlation between the monthly average water withdrawal and the average wastewater discharge?
+#2)Is population a key influencing factor to water withdrawal over the years?
+
+
+##2.Methods
+#2.1 Read datasets
+#To solve these problems, we gathered three main datasets from the website of NC DEQ Division of Water Resources-Local Water Supply Planning (https://www.ncwater.org/WUDC/app/LWSP/search.php) for monthly water withdraw data and monthly wastewater discharge data; from the website of Data Commons (https://datacommons.org/place/geoId/3719000?category=Demographics#Population) for population data in Durham county from 2012-2021.
+
 
 ```{r, read data}
 
@@ -61,6 +73,9 @@ water.withdraw<-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TR
 water.discharge<-read.csv(
   "./data/EDA_final project_wastewater_discharge.csv",stringsAsFactors = TRUE)
 ```
+
+#2.2 Data wrangling
+#In the data wrangling part, we first filtered population data we need for ten years and adjusted the formats of every column of data into the one more convenient for later steps. Then we joined the table for withdraw data, discharge data and population data by year and added the column of month to distinguish. Also, we created one dataset which summmarized the mean discharge amount and the mean withdraw amount in each month among years.
 
 ```{r, data wrangling}
 #1.First step eliminate the extra column in data set and convert it into format we need.
@@ -83,10 +98,10 @@ pop_water_summaries <-
             sd.discharge = sd(Monthly.Discharge.Wastewater), 
             mean.withdraw = mean(Monthly.Water.Withdraw), 
             sd.withdraw = sd(Monthly.Water.Withdraw))
-#sub-data frame to draw boxplots
+
 
 ```
-
+In the data wrangling part, first we read the population data; the monthly water withdraw data and the monthly wastewater discharge data into our file.
 ```{r, saving data}
 write.csv(pop_water_final, row.names = FALSE, file = "./data/Durham_water&population_2012-2021.csv")
 write.csv(pop_water_summaries, row.names = FALSE, file = "./data/Durham_county_water_withdraw&diacharge_summary.csv")
