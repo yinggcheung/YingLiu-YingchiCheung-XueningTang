@@ -1,30 +1,16 @@
-
 ---
 title: "Final Project_ENV872L-01"
 author: "Ying Liu, Yingchi Cheung, Xuening Tang"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d55d1f8abb97f1e78dab9a073d6a8b2e3926be93
-date: "`r Sys.Date()`"
+date: "12/12/2022"
 output:
   pdf_document: default
   html_document: default
-editor_options:
-<<<<<<< HEAD
-  chunk_output_type: console
-=======
-date: '`r Sys.Date()`'
-output: html_document
 editor_options: 
-=======
->>>>>>> d55d1f8abb97f1e78dab9a073d6a8b2e3926be93
   chunk_output_type: inline
->>>>>>> f7468648373a60dab0d8e3c331fe9d3462de72c1
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60), tidy=TRUE)
 ```
 
 ## R Markdown
@@ -33,11 +19,7 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-<<<<<<< HEAD
 ```{r, package}
-=======
-```{r}
->>>>>>> d55d1f8abb97f1e78dab9a073d6a8b2e3926be93
 
 getwd()
 library(tidyverse)
@@ -51,31 +33,35 @@ mytheme <- theme_classic(base_size = 12) +
 theme_set(mytheme)
 ```
 
-##1.Introduction
-#Water shortages around US due to climate change is becoming worse and reported by several studies. Also we are in the situation that two of the largest reservoirs in America, which provide water and electricity tomillions, are in danger of reaching 'dead pool status. With the rapid urbanization in cities around the world and in US, the amount of population is rapidly increasing and the imperviousness of urban surface is increasing as well, which could raise the need for water withdraw from the lake bodies or reservoirs and the amount of wastewater discharge from daily life. 
+> 1. Introduction
+>
+> Water shortages around US due to climate change is becoming worse and reported by several studies. Also we are in the situation that two of the largest reservoirs in America, which provide water and electricity tomillions, are in danger of reaching 'dead pool status. With the rapid urbanization in cities around the world and in US, the amount of population is rapidly increasing and the imperviousness of urban surface is increasing as well, which could raise the need for water withdrawal from the lake bodies or reservoirs and the amount of wastewater discharge from daily life. 
 
-#At the same time, the intemperate discharge of wastewater in US is becoming a critical issue so in this way, we would like to investigate two main questions in our report: 
-#1)Is there any clear correlation between the monthly average water withdrawal and the average wastewater discharge?
-#2)Is population a key influencing factor to water withdrawal over the years?
-
-
-##2.Methods
-#2.1 Read datasets
-#To solve these problems, we gathered three main datasets from the website of NC DEQ Division of Water Resources-Local Water Supply Planning (https://www.ncwater.org/WUDC/app/LWSP/search.php) for monthly water withdraw data and monthly wastewater discharge data; from the website of Data Commons (https://datacommons.org/place/geoId/3719000?category=Demographics#Population) for population data in Durham county from 2012-2021.
+> At the same time, the intemperate discharge of wastewater in US is becoming a critical issue so in this way, we would like to investigate two main questions in our report: 
+>1)Is there any clear correlation between the monthly average water withdrawal and the monthly average wastewater discharge?
+>2)Is population a key influencing factor to water withdrawal and wastewater discharge over the years?
+>
+>
+> 2. Methods
+>
+> 2.1 Read Datasets
+>
+> To solve these problems, we gathered three main datasets from the website of NC DEQ Division of Water Resources-Local Water Supply Planning (https://www.ncwater.org/WUDC/app/LWSP/search.php) for monthly water withdrawal data and monthly wastewater discharge data; from the website of Data Commons (https://datacommons.org/place/geoId/3719000?category=Demographics#Population) for population data in Durham county from 2012-2021.
 
 
 ```{r, read data}
 
-population<-read.csv("./data/Population_new.csv",stringsAsFactors = TRUE)
+population <-read.csv("./data/Population_new.csv",stringsAsFactors = TRUE)
 
-water.withdraw<-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TRUE)
+water.withdraw <-read.csv("./data/EDA final data_water.csv",stringsAsFactors = TRUE)
 
-water.discharge<-read.csv(
+water.discharge <-read.csv(
   "./data/EDA_final project_wastewater_discharge.csv",stringsAsFactors = TRUE)
 ```
 
-#2.2 Data wrangling
-#In the data wrangling part, we first filtered population data we need for ten years and adjusted the formats of every column of data into the one more convenient for later steps. Then we joined the table for withdraw data, discharge data and population data by year and added the column of month to distinguish. Also, we created one dataset which summmarized the mean discharge amount and the mean withdraw amount in each month among years.
+> 2.2 Data Wrangling
+>
+> In the data wrangling part, we first filtered population data we need for ten years and adjusted the formats of every column of data into the one more convenient for later steps. Then we joined the table for withdrawal data, discharge data and population data by year and added the column of month to distinguish. Also, we created one dataset which summmarized the mean discharge amount and the mean withdrawal amount in each month among years.
 
 ```{r, data wrangling}
 #1.First step eliminate the extra column in data set and convert it into format we need.
@@ -88,7 +74,7 @@ durh_pop <-
 #2.Next join the tables together as our main data frame to conduct analysis.
 water_final <- left_join(water.discharge, water.withdraw, by = c("Year", "Month"))
 
-pop_water_final <- left_join(durh_pop,water_final)
+pop_water_final <- left_join(durh_pop, water_final)
 pop_water_final$Population <-as.numeric(pop_water_final$Population)
 
 pop_water_summaries <- 
@@ -101,24 +87,31 @@ pop_water_summaries <-
 
 
 ```
-In the data wrangling part, first we read the population data; the monthly water withdraw data and the monthly wastewater discharge data into our file.
+
+>In the data wrangling part, first we read the population data; the monthly water withdrawal data and the monthly wastewater discharge data into our file.
+
 ```{r, saving data}
 write.csv(pop_water_final, row.names = FALSE, file = "./data/Durham_water&population_2012-2021.csv")
 write.csv(pop_water_summaries, row.names = FALSE, file = "./data/Durham_county_water_withdraw&diacharge_summary.csv")
 ```
 
+> 3. Data Visualization
+>
+> 3.1 Line Plot
+>
+> We created some data visualizations to make the data that we collected easy to understand. Frist, we made line plots for the average annual wastewater discharge, water withdrawal, and population for Durham from 2012 to 2021 using ggplot. A line plot is used for continuous variables over time. Over the course of 10 years, we can see in Figure 1 below that all three variables have an overall increasing trend.
+
 ```{r, line charts, fig.height=8, fig.width=8}
 discharge_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.discharge)) +
   geom_line() +
-  labs(title="Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
+  labs(title="Figure 1. Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
   geom_smooth(method = lm)
-
 
 withdraw_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.withdraw)) +
   geom_line() +
-  labs(title="Mean Water Withdraw", subtitle = "From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
+  labs(title="Mean Water Withdrawal", subtitle = "From 2012-2021", y = "Mean Withdrawal (MGD)", x = "Year") +
   geom_smooth(method = lm, color = "red")
 
 pop_linechart <- 
@@ -130,84 +123,76 @@ pop_linechart <-
 plot_grid(discharge_linechart, withdraw_linechart, pop_linechart, ncol = 1, align = "v", axis = 'l')
 ```
 
+> 3.2 Box Plot
+>
+> To examine the seasonal change of wastewater discharge and water withdrawal and the relationship between them, we made box plots (Figure 2) to see if there's any significant difference between each month in the last ten years for Durham. The monthly wastewater discharges from July to November are significantly different from the wastewater discharges from January to April. Therefore, during most of the summer and fall time, wastewater discharges are significantly lesser wastewater discharge than in most of the spring and winter time. Moreover, water withdrawals from January to March and November are significantly lower than from April to October. The water withdrawal in December is significantly lower than in all the other months, except in January. We conclude that summer's and most of the fall's water withdrawals are the highest. Also, winter has the lowest water withdrawal.
+>
+> We were expecting water withdrawal and wastewater discharge to be proportional before we were making the data analysis. Using common sense that high water withdrawal means high water demand, which results in high wastewater discharge. However, the box plots show differently. The water withdrawals and wastewater discharges in Durham from 2012 to 2021 have an inverse relationship. The water withdrawals during summer and fall are the highest, but the wastewater discharges are the lowest.
 
 ```{r, boxplots}
-#reshape the dataframe to draw boxplot
-install.packages(reshape)
-library(MASS) 
+
+library(MASS)
 library(reshape2) 
 library(reshape)
 
 discharge_withdraw_grouped <- melt(water_final, id = c("Year","Month"))
-Wastewater_box<-
-  ggplot(discharge_withdraw_grouped , aes(x = as.factor(Month), y = value, group = as.factor(Month), fill = variable)) +
+
+Wastewater_box <-
+  ggplot(discharge_withdraw_grouped, aes(x = as.factor(Month), y = value, group = as.factor(Month), fill = variable)) +
   geom_boxplot() +
   facet_wrap(~variable) +
-  labs(x = "Month", y = "Million Gallons Per Day") +
+  labs(title = "Figure 2.", x = "Month", y = "Million Gallons Per Day") +
   mytheme
     
 print(Wastewater_box)
 ```
 
 
-<<<<<<< HEAD
-print(DW_linechart)
-```
 
-```{r, boxplots_2}
-Wastewater_box <-
-  ggplot(water_final, aes(x = Month, y = Monthly.Discharge.Wastewater)) +
-  geom_boxplot(aes(color = Year, alpha = 0.5)) +
-  scale_x_discrete(drop = FALSE)
-print(Wastewater_box)
-```
-=======
->>>>>>> f7468648373a60dab0d8e3c331fe9d3462de72c1
-
-```{r, linear regression discharge~withdraw}
-#format the lm() function
+```{r, linear regression discharge~withdrawal}
+# Format the lm() function
 discharge_withdraw <- lm(data = pop_water_final, Monthly.Discharge.Wastewater~ Monthly.Water.Withdraw)
 summary(discharge_withdraw)
 
 # Add a line and standard error for the linear regression
 discharge_withdraw_regression <- 
-  ggplot(pop_water_final, aes(x = Monthly.Discharge.Wastewater, y = Monthly.Water.Withdraw )) +
-  geom_smooth(method = "lm",color="blue") +
+  ggplot(pop_water_final, aes(x = Monthly.Discharge.Wastewater, y = Monthly.Water.Withdraw)) +
+  geom_smooth(method = "lm", color = "blue") +
   scale_y_log10() +
-  geom_point(aes(color=Monthly.Discharge.Wastewater,alpha=0.5)) +
-  labs(x="Monthly Discharge Wastewater(MGD)", y="Monthly Water Withdraw(MGD)") +
+  geom_point(aes(color = Monthly.Discharge.Wastewater, alpha = 0.5)) +
+  labs(x="Monthly Discharge Wastewater (MGD)", y="Monthly Water Withdrawal (MGD)") +
   mytheme
 print(discharge_withdraw_regression) 
 ```
 
-```{r, linear regression population~withdraw}
-#format the lm() function
+```{r, linear regression population~withdrawal}
+# Format the lm() function
 population_discharge <- lm(data = pop_water_final, Population~ Monthly.Discharge.Wastewater)
 summary(population_discharge)
 
 # Add a line and standard error for the linear regression
 population_discharge_regression <- 
-  ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater )) +
-  geom_smooth(method = "lm",color="blue") +
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater)) +
+  geom_smooth(method = "lm", color = "blue") +
   scale_y_log10() +
-  geom_point(aes(color=Population,alpha=0.5)) +
-  labs(x="Population",y="Monthly Discharge Wastewater(MGD)") +
+  geom_point(aes(color = Population, alpha = 0.5)) +
+  labs(x = "Population", y = "Monthly Discharge Wastewater (MGD)") +
   mytheme
 print(population_discharge_regression) 
 ```
 
 ```{r, linear regression population~discharge}
-#format the lm() function
+# Format the lm() function
 population_withdraw <- lm(data = pop_water_final, Population~ Monthly.Water.Withdraw)
 summary(population_withdraw)
 
 # Add a line and standard error for the linear regression
 population_withdraw_regression <- 
-  ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
-  geom_smooth(method = "lm",color="blue") +
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw)) +
+  geom_smooth(method = "lm", color = "blue") +
   scale_y_log10() +
-  geom_point(aes(color=Population,alpha=0.5))+
-  labs(x="population",y="Monthly Water Withdraw(MGD)")+
+  geom_point(aes(color = Population, alpha = 0.5)) +
+  labs(x = "population", y = "Monthly Water Withdrawal (MGD)") +
   mytheme
 print(population_withdraw_regression) 
 ```
