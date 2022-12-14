@@ -1,16 +1,12 @@
 ---
-title: "Final Project_ENV872L-01"
+title: "Lastname_ENV872_Project.pdf"
 author: "Ying Liu, Yingchi Cheung, Xuening Tang"
-date: "12/12/2022"
-output:
-  pdf_document: default
-  html_document: default
-editor_options: 
-  chunk_output_type: inline
+date: "`r Sys.Date()`"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=50), tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60), tidy=TRUE)
 ```
 
 ## R Markdown
@@ -106,9 +102,7 @@ discharge_linechart <-
   ggplot(pop_water_summaries, aes(x = Year, y = mean.discharge)) +
   geom_line() +
   labs(title="Mean Wastewater Discharge From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
-
   labs(title="Figure 1. Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
-
   geom_smooth(method = lm)
 
 withdraw_linechart <- 
@@ -241,12 +235,12 @@ print(population_discharge_regression)
 
 ```{r, scatterplot population~withdrawal}
 #scatterplot of annual population and annual mean withdraw
-population_withdra <- 
+population_withdrawal<- 
   ggplot(pop_water_summaries, aes(x = Population, y = mean.withdraw )) +
   geom_point(aes(color=Year,alpha=0.5))+
   labs(title="Scatter plot of Annual Mean Water withdrawal and population",x="Population",y="Mean withdraw(MGD)")+
   mytheme
-print(population_withdraw)
+print(population_withdrawal)
 
 population_withdraw_scatter <- 
   ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
