@@ -105,7 +105,6 @@ write.csv(pop_water_summaries, row.names = FALSE, file = "./data/Durham_county_w
 discharge_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = mean.discharge)) +
   geom_line() +
-
   labs(title="Mean Wastewater Discharge From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
 
   labs(title="Figure 1. Mean Wastewater Discharge" , subtitle = "From 2012-2021", y = "Mean Discharge (MGD)", x = "Year") +
