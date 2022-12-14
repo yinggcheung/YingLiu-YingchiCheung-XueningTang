@@ -1,12 +1,12 @@
 ---
-title: "Lastname_ENV872_Project.pdf"
+title: "Correlation Among Durham City's Water Supply, Wastewater Discharge, and Population from 2012 to 2021"
 author: "Ying Liu, Yingchi Cheung, Xuening Tang"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60), tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=45), tidy=TRUE)
 ```
 
 ## R Markdown
@@ -110,12 +110,6 @@ withdraw_linechart <-
   geom_line() +
   labs(title="Mean Water Withdraw From 2012-2021", y = "Mean Withdraw (MGD)", x = "Year") +
   geom_smooth(method = lm, color = "red")
-plot(withdraw_linechart)
-
-plot_grid(discharge_linechart, withdraw_linechart, ncol = 1, align = "v", axis = 'l')
-
-  labs(title="Mean Water Withdrawal", subtitle = "From 2012-2021", y = "Mean Withdrawal (MGD)", x = "Year") +
-  geom_smooth(method = lm, color = "red")
 
 pop_linechart <- 
   ggplot(pop_water_summaries, aes(x = Year, y = Population)) +
@@ -154,25 +148,25 @@ Wastewater_box <-
     
 print(Wastewater_box)
 ```
->3.3 Data Analysis
+> 3.3 Data Analysis
 >
->3.3.1 Methodology
-To explore relationship between population,monthly water withdraw,and monthly wastewater discharge,we first did a scatterplot between each two of the variablesm to observe a trend. Then created linear model, examined results and visualize results.
+> 3.3.1 Methodology
+To explore the relationship between population, monthly water withdrawal, and monthly wastewater discharge. We first did a scatterplot between each of the variables to observe a trend. Then, we created linear models to examine results and visualize results.
 >
->3.3.2 Water Dicharge and Water withdrawal
-Scatter plot of monthly water discharge and withdrawal exhibited a negative trend between the two despite some cluttering. Monthly waste water discharge increased as monthly water withdrawal decreased.
+> 3.3.2 Water Dicharge and Water withdrawal
+The Scatter plot of monthly water discharge and withdrawal exhibited a negative trend between the two despite some cluttering. Monthly wastewater discharge increased as monthly water withdrawal decreased.
 
 
 ```{r, scatterplot discharge~withdraw}
 #draw scatterplot to see if a trend exsist
 discharge_withdraw <- 
   ggplot(pop_water_final, aes(x = Monthly.Discharge.Wastewater, y = Monthly.Water.Withdraw)) +
-  geom_point(aes(color=Year,alpha=0.5))+
-  labs(title="Scatter plot of Monthly Water Withdrawal and Monthly Wastewater Discharge",x="Monthly Wastewater Discharge(MGD)",y="Monthly Water Withdraw(MGD)")+
+  geom_point(aes(color = Year,alpha = 0.5))+
+  labs(title="Scatter Plot of Monthly Water Withdrawal and Monthly Wastewater Discharge", x="Monthly Wastewater Discharge (MGD)", y="Monthly Water Withdrawal (MGD)")+
   mytheme
 print(discharge_withdraw) 
 ```
->We used linear regression to determine if there is significant relationship. P-value is close to zero which indicates that there is high signicifance between monthly waste water discharge and water withdrawal.The distribution of the residuals is not strongly symmetrical, meaning that predicted water discharge points fall far away from the actual observed points.Residual standard error is 2.5, given that mean monthly water withdrawal is 29.18,the precentage error is 8.57%. These all ponits to a high revelance between water dischagre and water withdrawal.However,the multiple R-squared shows that only 17.5% precent of the variance can be explained by water discharge.
+> We used linear regression to determine if there is a significant relationship. P-value is close to zero which indicates that there is a high significance between monthly wastewater discharge and water withdrawal. The distribution of the residuals is not strongly symmetrical, meaning that predicted water discharge points fall far away from the actual observed points. The residual standard error is 2.5, given that the mean monthly water withdrawal is 29.18, and the percentage error is 8.57%. These all point to a high relevance between water discharge and water withdrawal. However, the multiple R-squared shows that only 17.5% percent of the variance can be explained by water discharge.
 
 ```{r, linear regression discharge~withdrawal}
 # Format the lm() function
@@ -191,28 +185,29 @@ discharge_withdraw_regression <-
 print(discharge_withdraw_regression) 
 
 ```
->3.3.3 Population and Water withdrawal
+> 3.3.3 Population and Water withdrawal
 >
->Due to the time-scale difference in population and water withdral data, this analysis uses two scatter plots:annual mean water withdrawal and population, monlth water withdrawal and population.  Both shows a positive trend between the two. Monthly water withdrawal increase as population expanded during the last ten years.
+> Due to the time-scale difference in population and water withdrawal data, this analysis uses two scatter plots: annual mean water withdrawal and population, and monthly water withdrawal and population. They both show a positive trend. Monthly water withdrawal has increase as the population expanded during the last ten years.
 
 ```{r, scatterplot population~discharge}
 #scatterplot of annual population and annual mean discharge
 population_discharge <- 
-  ggplot(pop_water_summaries, aes(x = Population, y = mean.discharge )) +
-  geom_point(aes(color=Year,alpha=0.5))+
-  labs(title="Scatter plot of Annual Mean Water Withdrawal and population",x="Population",y="Mean Wastewater Discharge(MGD)")+
+  ggplot(pop_water_summaries, aes(x = Population, y = mean.discharge)) +
+  geom_point(aes(color=Year,alpha=0.5)) +
+  labs(title="Scatter Plot of Annual Mean Water Withdrawal and Population", x="Population", y="Mean Wastewater Discharge (MGD)") +
   mytheme
 print(population_discharge)
 #scatterplot of annual population and monthly mean discharge
 population_discharge_scatter <- 
   ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater )) +
   geom_point(aes(color=Year,alpha=0.5))+
-  labs(title="Scatter plot of Monthly Water Withdrawal and population",x="Population",y="Monthly Wastewater Discharge(MGD)")+
+  labs(title="Scatter Plot of Monthly Water Withdrawal and Population", x="Population", y="Monthly Wastewater Discharge (MGD)") +
   mytheme
+
 print(population_discharge_scatter) 
 
 ```
->P-value is close to zero which indicates a signicifant relationship between monthly water discharge and population.The distribution of the residuals is fairly symmetrical, meaning that predicted water discharge points fall near the actual observed points.Residual standard error is 14930, given that mean monthly water discharge is 231371,the precentage error is 6.45%. Thus, we can conclude that Durham population growth is an significant influencing factor on monthly water discharge over the last ten years .
+> P-value is close to zero which means there is a significant relationship between monthly water discharge and population. The distribution of the residuals is fairly symmetrical, meaning that predicted water discharge points fall near the actual observed points. The residual standard error is 14930, given that the mean monthly water discharge is 231371, and the percentage error is 6.45%. Thus, we can conclude that Durham's population growth is a significant influencing factor on monthly water discharge over the last ten years.
 
 ```{r, linear regression population~discharge}
 # Format the lm() function
@@ -222,35 +217,35 @@ summary(population_discharge)
 
 # Add a line and standard error for the linear regression
 population_discharge_regression <- 
-  ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater )) +
-  geom_smooth(method = "lm",color="blue") +
-  geom_point(aes(color=Year,alpha=0.5))+
-  labs(x="Population",y="Monthly Wastewater Discharge(MGD)")+
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Discharge.Wastewater)) +
+  geom_smooth(method = "lm",color = "blue") +
+  geom_point(aes(color = Year, alpha = 0.5))+
+  labs(x = "Population", y = "Monthly Wastewater Discharge (MGD)")+
   mytheme
 print(population_discharge_regression) 
 ```
->3.3.4 Population and Wastewater withdrawal
+> 3.3.4 Population and Wastewater withdrawal
 >
->Similiar to population~withdrawal, this analysis uses two scatter plots:annual mean water withdrawal and population, monlth water withdrawal and population. Both that monthly water withdrawal increased as population grown.
+> Similar to population~withdrawal, this analysis uses two scatter plots: annual mean water withdrawal and population, and monthly water withdrawal and population. Both monthly water withdrawals increased as the population grew.
 
 ```{r, scatterplot population~withdrawal}
 #scatterplot of annual population and annual mean withdraw
 population_withdrawal<- 
   ggplot(pop_water_summaries, aes(x = Population, y = mean.withdraw )) +
-  geom_point(aes(color=Year,alpha=0.5))+
-  labs(title="Scatter plot of Annual Mean Water withdrawal and population",x="Population",y="Mean withdraw(MGD)")+
+  geom_point(aes(color = Year, alpha = 0.5))+
+  labs(title="Scatter plot of Annual Mean Water Withdrawal and Population", x = "Population", y = "Mean Withdrawal (MGD)") +
   mytheme
 print(population_withdrawal)
 
 population_withdraw_scatter <- 
   ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
-  geom_point(aes(color=Year,alpha=0.5))+
-  labs(title="Scatter plot of Monthly Water withdrawal and population",x="Population",y="Monthly Water Withdraw(MGD)")+
+  geom_point(aes(color=Year,alpha=0.5)) +
+  labs(title="Scatter Plot of Monthly Water Withdrawal and Population",x="Population",y="Monthly Water Withdrawal (MGD)") +
   mytheme
 print(population_withdraw_scatter) 
 
 ```
->P-value(0.0334) is smaller than 0.05, showing a significant relationship between population growth and monthly water withdrawal The distribution of the residuals is fairly symmetrical, but have larger difference on the end, which means that predicted water withdrawal points fall far from the actual observed points on the extremes.Residual standard error is 15230, given that mean monthly water doscharge is 238544,the precentage error is 6.38%. All combined, over the pst decade, population is also an key influence factor on monthly water withdrawal .
+> P-value(0.0334) is smaller than 0.05, showing a significant relationship between population growth and monthly water withdrawal The distribution of the residuals is fairly symmetrical, but it has a larger difference on the end, which means that predicted water withdrawal points fall far from the actual observed points on the extremes. The residual standard error is 15230, given that the mean monthly water discharge is 238544, and the percentage error is 6.38%. All combined, over the past decade, the population is also a key influence factor on monthly water withdrawal.
 
 ```{r, linear regression population~withdrawal}
 # Format the lm() function
@@ -259,14 +254,14 @@ summary(population_withdraw)
 
 # Add a line and standard error for the linear regression
 population_withdraw_regression <- 
-  ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw )) +
-  geom_smooth(method = "lm",color="blue") +
-  geom_point(aes(color=Year,alpha=0.5))+
-  labs(x="Population",y="Monthly Water withdrawal(MGD)")+
+  ggplot(pop_water_final, aes(x = Population, y = Monthly.Water.Withdraw)) +
+  geom_smooth(method = "lm",color = "blue") +
+  geom_point(aes(color = Year, alpha = 0.5))+
+  labs(x = "Population", y = "Monthly Water Withdrawal (MGD)")+
   mytheme
 print(population_withdraw_regression) 
 ```
 > 4. Conclusion
 >
->Both water withdrawal and waste water discharge increased during the last 10 years, while showing different patterns within the year. Withdrawals during summer and fall are the highest when wastewater discharges are the lowest. By using linear regression, we can conclude that withdrawal,and population show correlation between each two variables, of which discharge and withdrawal have the highest significance, while popultion and monthly water discharge has highest coefficiency.   
+> Both water withdrawal and wastewater discharge increased during the last 10 years show different patterns within the year. Water withdrawals during summer and fall are the highest, whlie wastewater discharges are the lowest. By using linear regression, we can conclude that water withdrawal and population show correlation between each two variables, of which wastewater discharge and water withdrawal have the highest significance difference, and popultion and monthly water discharge have highest coefficiency.  
 
